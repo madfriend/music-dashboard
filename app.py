@@ -4,28 +4,29 @@ from flask import Flask, render_template
 from models import UserArtist as UA
 
 app = Flask(__name__)
+json_ok = '{status: "ok"}'
 
-@app.route("/<user>")
+@app.route('/<user>')
 def hello(user):
     artists = UA.select().where(UA.user == user)
     artists = list(map(lambda A: A.artist, artists))
     return render_template('me.html', artists=json.dumps(artists), user=user)
 
-@app.route("/api/add/<user>/<artist>")
+@app.route('/api/add/<user>/<artist>')
 def add(user, artist):
     UA.create(user=user, artist=artist)
-    return True
+    return json_ok
 
-@app.route("/api/delete/<user>/<artist>")
+@app.route('/api/delete/<user>/<artist>')
 def delete(user, artist):
     UA.delete().where(
         UA.user == user, UA.artist == artist)
-    return True
+    return json_ok
 
-@app.route("/")
+@app.route('/')
 def index():
     return 'goto /username'
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
