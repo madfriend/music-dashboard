@@ -5,15 +5,17 @@
     <title>My artists</title>
     <script type="text/javascript" src="https://unpkg.com/vue@2.2.1"></script>
 </head>
-<body id="app">
-    <aside>
-        <ul>
-            <li v-for="artist in sortedArtists">
-              (( artist ))
-            </li>
-        </ul>
-    </aside>
-    <main></main>
+<body>
+    <main id="app">
+        <aside>
+            <ul>
+                <li v-for="artist in sortedArtists">
+                  (( artist ))
+                </li>
+            </ul>
+        </aside>
+        <div class="container"></div>
+    </main>
 
     <script type="text/javascript">
         var artists = {{ artists|safe }};
