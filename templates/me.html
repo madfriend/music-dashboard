@@ -13,6 +13,9 @@
                   (( artist ))
                 </li>
             </ul>
+            <input class="new-todo" autofocus autocomplete="off"
+                placeholder="New artist?" v-model="newArtist"
+                @keyup.enter="addArtist"/>
         </aside>
         <div class="container"></div>
     </main>
@@ -23,14 +26,25 @@
         var app = new Vue({
           el: '#app',
           data: {
-            artists: artists
+            artists: artists,
+            newArtist: ''
           },
           computed: {
             sortedArtists: function() {
                 return this.artists.concat().sort();
             }
           },
-          delimiters: ['((', '))']
+          delimiters: ['((', '))'],
+
+          methods: {
+              addArtist: function () {
+                var value = this.newArtist && this.newArtist.trim();
+                if (!value) {
+                  return;
+                }
+                this.artists.push(value);
+                this.newArtist = '';
+              },
         });
 
     </script>
