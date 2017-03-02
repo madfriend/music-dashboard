@@ -9,7 +9,7 @@ app = Flask(__name__)
 def hello(user):
     artists = UA.select().where(UA.user == user)
     artists = list(map(lambda A: A.artist, artists))
-    return render_template('me.html', artists=json.dumps(artists))
+    return render_template('me.html', artists=json.dumps(artists), user=user)
 
 @app.route("/api/add/<user>/<artist>")
 def add(user, artist):

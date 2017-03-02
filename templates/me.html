@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>My artists</title>
     <script type="text/javascript" src="https://unpkg.com/vue@2.2.1"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
     <main id="app">
@@ -37,13 +38,17 @@
             delimiters: ['((', '))'],
 
             methods: {
-                addArtist: function () {
+                addArtist: function() {
                     var value = this.newArtist && this.newArtist.trim();
                     if (!value) {
                         return;
                     }
                     this.artists.push(value);
+                    this.saveArtist(value);
                     this.newArtist = '';
+                },
+                saveArtist: function(value) {
+                    axios.get('/api/add/{{ user }}/' + value);
                 }
             }
         });
