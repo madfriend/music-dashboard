@@ -24,27 +24,28 @@
         var artists = {{ artists|safe }};
 
         var app = new Vue({
-          el: '#app',
-          data: {
-            artists: artists,
-            newArtist: ''
-          },
-          computed: {
-            sortedArtists: function() {
-                return this.artists.concat().sort();
-            }
-          },
-          delimiters: ['((', '))'],
-
-          methods: {
-              addArtist: function () {
-                var value = this.newArtist && this.newArtist.trim();
-                if (!value) {
-                  return;
+            el: '#app',
+            data: {
+                artists: artists,
+                newArtist: ''
+            },
+            computed: {
+                sortedArtists: function() {
+                    return this.artists.concat().sort();
                 }
-                this.artists.push(value);
-                this.newArtist = '';
-          }
+            },
+            delimiters: ['((', '))'],
+
+            methods: {
+                addArtist: function () {
+                    var value = this.newArtist && this.newArtist.trim();
+                    if (!value) {
+                        return;
+                    }
+                    this.artists.push(value);
+                    this.newArtist = '';
+                }
+            }
         });
 
     </script>
