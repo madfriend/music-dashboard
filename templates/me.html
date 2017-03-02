@@ -8,8 +8,8 @@
 <body id="app">
     <aside>
         <ul>
-            <li v-for="artist in artists">
-              {{ artist }}
+            <li v-for="artist in sortedArtists">
+              [[ artist ]]
             </li>
         </ul>
     </aside>
@@ -18,10 +18,16 @@
     <script type="text/javascript">
         var artists = {{ artists|safe }};
 
+        Vue.config.delimiters = ['[[', ']]'];
         var app = new Vue({
           el: '#app',
           data: {
             artists: artists
+          },
+          computed: {
+            sortedArtists: function() {
+                return this.numbers.concat().sort();
+            }
           }
         });
 
