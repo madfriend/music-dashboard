@@ -12,3 +12,4 @@ beautifulsoup4
 lxml
 requests
 peewee
+psycopg2
