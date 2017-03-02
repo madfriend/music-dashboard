@@ -1,9 +1,9 @@
 import os
-from urllib.parse import urlparse
+import urllib.parse
 from peewee import *
 
-urlparse.uses_netloc.append("postgres")
-url = urlparse.urlparse(os.environ["DATABASE_URL"])
+urllib.parse.uses_netloc.append("postgres")
+url = urllib.parse.urlparse(os.environ["DATABASE_URL"])
 
 db = PostgresqlDatabase(
     url.path[1:],
