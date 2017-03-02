@@ -19,6 +19,10 @@ def delete(user, artist):
     return UA.delete().where(
         UA.user == user, UA.artist == artist)
 
+@app.route("/")
+def index():
+    return 'goto /<username>'
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
