@@ -13,12 +13,14 @@ def hello(user):
 
 @app.route("/api/add/<user>/<artist>")
 def add(user, artist):
-    return UA.create(user=user, artist=artist)
+    UA.create(user=user, artist=artist)
+    return True
 
 @app.route("/api/delete/<user>/<artist>")
 def delete(user, artist):
-    return UA.delete().where(
+    UA.delete().where(
         UA.user == user, UA.artist == artist)
+    return True
 
 @app.route("/")
 def index():

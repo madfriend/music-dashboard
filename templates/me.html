@@ -6,7 +6,7 @@
 </head>
 <body>
 	<script type="text/javascript">
-		var artists = {{{ artists }}};
+		var artists = {{ artists|safe }};
 		console.log(artists);
 	</script>
 </body>
