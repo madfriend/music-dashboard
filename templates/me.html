@@ -48,7 +48,10 @@
                     this.newArtist = '';
                 },
                 saveArtist: function(value) {
-                    axios.get('/api/add/{{ user }}/' + value);
+                    axios.post('/api/add', {
+                        user: '{{ user }}',
+                        artist: value
+                    });
                 }
             }
         });

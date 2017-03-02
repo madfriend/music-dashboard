@@ -12,15 +12,15 @@ def hello(user):
     artists = list(map(lambda A: A.artist, artists))
     return render_template('me.html', artists=json.dumps(artists), user=user)
 
-@app.route('/api/add/<user>/<artist>')
-def add(user, artist):
-    UA.create(user=user, artist=artist)
+@app.route('/api/add', methods=['POST'])
+def add():
+    UA.create(user=request.form['user'], artist=request.form['artist'])
     return json_ok
 
-@app.route('/api/delete/<user>/<artist>')
-def delete(user, artist):
+@app.route('/api/delete', methods=['POST'])
+def delete():
     UA.delete().where(
-        UA.user == user, UA.artist == artist)
+        UA.user == request.form['user'], UA.artist == request.form['artist'])
     return json_ok
 
 @app.route('/')
