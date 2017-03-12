@@ -19,47 +19,18 @@
                 @keyup.enter="addArtist"/>
         </aside>
         <div class="container">
-            <div v-for="artist in sortedArtists" class="card">
-                (( artist ))
+            <div v-for="artist in sortedArtists" v-if="artistCache[artist]" class="card">
+                (( artistCache[artist].name ))
             </div>
         </div>
     </main>
 
     <script type="text/javascript">
-        var artists = {{ artists|safe }};
-
-        var app = new Vue({
-            el: '#app',
-            data: {
-                artists: artists,
-                newArtist: ''
-            },
-            computed: {
-                sortedArtists: function() {
-                    return this.artists.concat().sort();
-                }
-            },
-            delimiters: ['((', '))'],
-
-            methods: {
-                addArtist: function() {
-                    var value = this.newArtist && this.newArtist.trim();
-                    if (!value) {
-                        return;
-                    }
-                    this.artists.push(value);
-                    this.saveArtist(value);
-                    this.newArtist = '';
-                },
-                saveArtist: function(value) {
-                    axios.post('/api/add', {
-                        user: '{{ user }}',
-                        artist: value
-                    });
-                }
-            }
-        });
-
+        var ARTISTS = {{ artists|safe }};
+        var USER = "{{ user | safe }}";
     </script>
+
+    <script type="text/javascript" src="/static/js/lastfm.js"></script>
+    <script type="text/javascript" src="/static/js/app.js"></script>
 </body>
 </html>

@@ -1,9 +1,9 @@
 import os
 import json
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for
 from models import UserArtist as UA
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 json_ok = '{status: "ok"}'
 
 @app.route('/<user>')
