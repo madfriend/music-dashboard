@@ -18,7 +18,11 @@
                 placeholder="New artist?" v-model="newArtist"
                 @keyup.enter="addArtist"/>
         </aside>
-        <div class="container"></div>
+        <div class="container">
+            <div v-for="artist in sortedArtists" class="card">
+                (( artist ))
+            </div>
+        </div>
     </main>
 
     <script type="text/javascript">
