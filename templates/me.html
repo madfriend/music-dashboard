@@ -2,25 +2,36 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My artists</title>
+    <title>Gigs for {{ user | safe }}</title>
     <script type="text/javascript" src="https://unpkg.com/vue@2.2.1"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/app.css"/>
 </head>
 <body>
     <main id="app">
         <aside>
-            <ul>
-                <li v-for="artist in sortedArtists">
-                  (( artist ))
-                </li>
-            </ul>
+            <div v-for="artist in sortedArtists" v-if="artistCache[artist]">
+              (( artistCache[artist].name ))
+            </div>
             <input class="new-todo" autofocus autocomplete="off"
                 placeholder="New artist?" v-model="newArtist"
                 @keyup.enter="addArtist"/>
         </aside>
         <div class="container">
             <div v-for="artist in sortedArtists" v-if="artistCache[artist]" class="card">
-                (( artistCache[artist].name ))
+                <div class="img-wrap">
+                    <span class="delete-icon" v-on:click="removeArtist(artist)">&times;</span>
+                    <img v-bind:src="artistCache[artist].img" v-if="artistCache[artist].img.length"/>
+                    <b class="title">(( artistCache[artist].name ))</b>
+                </div>
+
+                <div class="desc">
+                    <div v-for="event in eventsCache[artistCache[artist].id]" class="event">
+                        <a v-bind:href="event.url" target="_blank">(( event.location )) (( event.date ))</a>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -31,6 +42,7 @@
     </script>
 
     <script type="text/javascript" src="/static/js/lastfm.js"></script>
+    <script type="text/javascript" src="/static/js/songkick.js"></script>
     <script type="text/javascript" src="/static/js/app.js"></script>
 </body>
 </html>

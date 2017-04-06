@@ -15,14 +15,15 @@ def hello(user):
 @app.route('/api/add', methods=['POST'])
 def add():
     d = request.get_json()
-    UA.create(user=d['user'], artist=d['artist'])
+    UA.create(user=d['user'], artist=d['artist'].lower())
     return json_ok
 
 @app.route('/api/delete', methods=['POST'])
 def delete():
     d = request.get_json()
-    UA.delete().where(
-        UA.user == d['user'], UA.artist == d['artist'])
+    q = UA.delete().where(
+        UA.user == d['user'], UA.artist == d['artist'].lower())
+    q.execute()
     return json_ok
 
 @app.route('/')

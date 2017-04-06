@@ -1,4 +1,19 @@
 var lastfm = new LastFM();
+var songkick = new Songkick();
+
+assureLocation();
+
+function assureLocation() {
+    var lon = localStorage.getItem('lon'),
+        lat = localStorage.getItem('lon');
+
+    if (!lon || !lat) {
+        navigator.geolocation.getCurrentPosition(function(pos) {
+            localStorage.setItem('lon', pos.coords.longitude);
+            localStorage.setItem('lat', pos.coords.latitude);
+        });
+    };
+}
 
 var app = new Vue({
     el: '#app',
@@ -7,7 +22,8 @@ var app = new Vue({
         artists: ARTISTS,
         username: USER,
         newArtist: '',
-        artistCache: {}
+        artistCache: {},
+        eventsCache: {}
     },
 
     computed: {
@@ -28,6 +44,7 @@ var app = new Vue({
             if (!value) {
                 return;
             }
+
             this.artists.push(value);
             this.addToCache(value);
             this.saveArtist(value);
@@ -41,11 +58,24 @@ var app = new Vue({
             });
         },
         addToCache: function(artist) {
-            lastfm.search(artist, function(result) {
-                Vue.set(this.artistCache, artist, result);
-            }.bind(this));
-                // Vue.set(this.artistCache, artist, {'name': artist.toUpperCase()});
+            if (this.artistCache[artist]) return true;
+            var that = this;
 
+            lastfm.get(artist, function(result) {
+                Vue.set(that.artistCache, artist, result);
+
+                songkick.events(result.id, function(events) {
+                    console.log(result.id, events);
+                    Vue.set(that.eventsCache, result.id, events);
+                });
+            });
+        },
+        removeArtist: function(artist) {
+            this.artists.splice(this.artists.indexOf(artist), 1);
+            axios.post('/api/delete', {
+                user: this.username,
+                artist: artist
+            });
         }
     }
 });
