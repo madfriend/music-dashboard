@@ -1,8 +1,13 @@
 import os
 import json
+import datetime
+
 from flask import Flask, render_template, request, url_for
 import requests
-from models import UserArtist as UA
+
+from models import UserArtist as UA, \
+                   ArtistSearchCache as ArtistCache, \
+                   EventSearchCache as EventCache
 
 
 app = Flask(__name__, static_url_path='/static')
@@ -30,18 +35,32 @@ def delete():
 
 @app.route('/api/events/<mbid>')
 def songkick(mbid):
-    url = ('http://api.songkick.com/api/3.0/'
-           'artists/mbid:{mbid}/calendar.json?apikey={api_key}')
-    url = url.format(api_key='zAW2XV2c43Uzvbvw', mbid=mbid)
-    return requests.get(url).text
+    try:
+        day_ago = datetime.datetime.now() - datetime.timedelta(days=1)
+        return EventCache.get(
+            EventCache.mbid == mbid, EventCache.created_date < day_ago).result
+
+    except EventCache.DoesNotExist:
+        url = ('http://api.songkick.com/api/3.0/'
+               'artists/mbid:{mbid}/calendar.json?apikey={api_key}')
+        url = url.format(api_key='zAW2XV2c43Uzvbvw', mbid=mbid)
+        result = requests.get(url).text
+        EventCache.create(mbid=mbid, result=result)
+        return result
 
 @app.route('/api/artist_search/<query>')
 def lastfm(query):
-    url = ('http://ws.audioscrobbler.com/2.0/'
-           '?method=artist.getinfo&artist={query}&api_key={api_key}'
-           '&format=json&autocorrect=1')
-    url = url.format(api_key='a8d89621af7fd4cd295339d82e120d80', query=query)
-    return requests.get(url).text
+    try:
+        return ArtistCache.get(ArtistCache.query == query.lower()).result
+    except ArtistCache.DoesNotExist:
+        url = ('http://ws.audioscrobbler.com/2.0/'
+               '?method=artist.getinfo&artist={query}&api_key={api_key}'
+               '&format=json&autocorrect=1')
+        url = url.format(api_key='a8d89621af7fd4cd295339d82e120d80', query=query)
+        result = requests.get(url).text
+
+        ArtistCache.create(query=query.lower(), result=result)
+        return result
 
 @app.route('/')
 def index():

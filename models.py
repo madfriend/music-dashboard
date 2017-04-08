@@ -1,5 +1,7 @@
 import os
 import urllib.parse
+import datetime
+
 from peewee import *
 
 urllib.parse.uses_netloc.append('postgres')
@@ -23,5 +25,21 @@ class UserArtist(Model):
             (('user', 'artist'), True),
         )
 
+class ArtistSearchCache(Model):
+    query = CharField()
+    result = TextField()
+    created_date = DateTimeField(default=datetime.datetime.now)
+
+    class Meta:
+        database = db
+
+class EventSearchCache(Model):
+    mbid = CharField()
+    result = TextField()
+    created_date = DateTimeField(default=datetime.datetime.now)
+
+    class Meta:
+        database = db
+
 db.connect()
-db.create_tables([UserArtist], safe=True)
+db.create_tables([UserArtist, ArtistSearchCache, EventSearchCache], safe=True)
