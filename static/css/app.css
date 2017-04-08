@@ -10,8 +10,28 @@ main {
 }
 
 aside {
-    width: 200px;
+    width: 180px;
     font-size: 0.8em;
+    padding: 5px 10px 5px 5px;
+    box-sizing: border-box;
+}
+
+aside div {
+    margin-bottom: 5px;
+}
+
+aside div .delete-icon {
+    float: right;
+    clear: both;
+    color: #555;
+}
+
+input.new-todo {
+    width: 100%;
+    background-color: #111;
+    border: none;
+    border-bottom: solid 1px #444;
+    margin-bottom: 10px;
 }
 
 .container {
@@ -22,11 +42,11 @@ aside {
 }
 
 .card {
-    margin-right: 10px;
-    margin-bottom: 10px;
+    margin-right: 5px;
+    margin-bottom: 5px;
     width: 150px;
     padding: 5px;
-    background-color: #333;
+    background-color: #222;
     position: relative;
 }
 
@@ -48,7 +68,7 @@ aside {
 
 .card .img-wrap {
     width: 150px;
-    height: 150px;
+    height: 110px;
     overflow: hidden;
     position: relative;
 }
@@ -75,4 +95,16 @@ aside {
     font-size: 0.6em;
     color: white;
     text-decoration: none;
+}
+
+.list-complete-item {
+    transition: all 1s;
+}
+.list-complete-enter, .list-complete-leave-to
+/* .list-complete-leave-active for <2.1.8 */ {
+    opacity: 0;
+    transform: translateX(30px);
+}
+.list-complete-leave-active {
+    position: absolute;
 }

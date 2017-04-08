@@ -1,7 +1,9 @@
 import os
 import json
 from flask import Flask, render_template, request, url_for
+import requests
 from models import UserArtist as UA
+
 
 app = Flask(__name__, static_url_path='/static')
 json_ok = '{status: "ok"}'
@@ -25,6 +27,21 @@ def delete():
         UA.user == d['user'], UA.artist == d['artist'].lower())
     q.execute()
     return json_ok
+
+@app.route('/api/events/<mbid>')
+def songkick(mbid):
+    url = ('http://api.songkick.com/api/3.0/'
+           'artists/mbid:{mbid}/calendar.json?apikey={api_key}')
+    url = url.format(api_key='zAW2XV2c43Uzvbvw', mbid=mbid)
+    return requests.get(url).text
+
+@app.route('/api/artist_search/<query>')
+def lastfm(query):
+    url = ('http://ws.audioscrobbler.com/2.0/'
+           '?method=artist.getinfo&artist={query}&api_key={api_key}'
+           '&format=json&autocorrect=1')
+    url = url.format(api_key='a8d89621af7fd4cd295339d82e120d80', query=query)
+    return requests.get(url).text
 
 @app.route('/')
 def index():

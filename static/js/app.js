@@ -35,7 +35,7 @@ var app = new Vue({
     delimiters: ['((', '))'],
 
     created: function() {
-        this.artists.map(this.addToCache, this);
+        this.sortedArtists.map(this.addToCache, this);
     },
 
     methods: {
@@ -62,10 +62,10 @@ var app = new Vue({
             var that = this;
 
             lastfm.get(artist, function(result) {
-                Vue.set(that.artistCache, artist, result);
+                if (!result) return false;
 
+                Vue.set(that.artistCache, artist, result);
                 songkick.events(result.id, function(events) {
-                    console.log(result.id, events);
                     Vue.set(that.eventsCache, result.id, events);
                 });
             });

@@ -1,14 +1,7 @@
-function Songkick() {
-    this.api_key = 'zAW2XV2c43Uzvbvw';
-    this.events_url = 'http://api.songkick.com/api/3.0/' +
-                        'artists/mbid:{{mbid}}/calendar.json?apikey={{api_key}}';
-
-}
+function Songkick() {}
 
 Songkick.prototype.makeEventsUrl = function(mbid) {
-    return this.events_url
-        .replace('{{api_key}}', this.api_key)
-        .replace('{{mbid}}', mbid);
+    return '/api/events/' + mbid;
 };
 
 Songkick.prototype.events = function(mbid, cb) {
@@ -21,21 +14,23 @@ Songkick.prototype.events = function(mbid, cb) {
 Songkick.prototype.reduceData = function(data) {
     var events = data.resultsPage.results.event || [];
     if (events.length === 0) return [];
+    events = events.filter(onlyNext8Months);
     events.sort(byProximity);
-    topEvents = events.slice(0, 5);
+    topEvents = events.slice(0, 3);
     topEvents.sort(byDate);
     return topEvents.map(this.reduceEvent);
 };
 
 Songkick.prototype.reduceEvent = function(event) {
-    var dateFmt = {day : 'numeric', month : 'short', year: 'numeric'};
+    var dateFmt = {day : 'numeric', month : 'short'};
+    var loc = event.location.city.split(',')[0];
 
     return {
         'id': event.id,
         'url': event.uri,
         'name': event.displayName,
         'date': new Date(event.start.date).toLocaleDateString('ru-RU', dateFmt),
-        'location': event.location.city
+        'location': loc
     };
 };
 
@@ -44,6 +39,13 @@ function byProximity(a, b) {
     var dist1 = distance(a.location.lng, a.location.lat),
         dist2 = distance(b.location.lng, b.location.lat);
     return dist1 - dist2;
+}
+
+function onlyNext8Months(event) {
+    var now = new Date();
+    var timeDiff = Math.abs(now.getTime() - (new Date(event.start.date)).getTime());
+    var monthsDiff = Math.ceil(timeDiff / (1000 * 3600 * 24 * 30));
+    return monthsDiff <= 8;
 }
 
 function byDate(a, b) {

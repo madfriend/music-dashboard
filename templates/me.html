@@ -12,15 +12,20 @@
 <body>
     <main id="app">
         <aside>
-            <div v-for="artist in sortedArtists" v-if="artistCache[artist]">
-              (( artistCache[artist].name ))
-            </div>
             <input class="new-todo" autofocus autocomplete="off"
                 placeholder="New artist?" v-model="newArtist"
                 @keyup.enter="addArtist"/>
+
+            <transition-group name="list-complete" tag="div" class="artists-container">
+                <div v-for="artist in sortedArtists" v-if="artistCache[artist]" class="list-complete-item" v-bind:key="artist">
+                  (( artistCache[artist].name )) <span class="delete-icon">&times;</span>
+                </div>
+            </transition-group>
+
         </aside>
-        <div class="container">
-            <div v-for="artist in sortedArtists" v-if="artistCache[artist]" class="card">
+
+        <transition-group name="list-complete" tag="div" class="container">
+            <div v-for="artist in sortedArtists" v-if="artistCache[artist]" v-bind:key="artist" class="card list-complete-item">
                 <div class="img-wrap">
                     <span class="delete-icon" v-on:click="removeArtist(artist)">&times;</span>
                     <img v-bind:src="artistCache[artist].img" v-if="artistCache[artist].img.length"/>
@@ -29,11 +34,13 @@
 
                 <div class="desc">
                     <div v-for="event in eventsCache[artistCache[artist].id]" class="event">
-                        <a v-bind:href="event.url" target="_blank">(( event.location )) (( event.date ))</a>
+                        <a v-bind:href="event.url" target="_blank">
+                            <b>(( event.location ))</b> (( event.date ))</a>
                     </div>
                 </div>
             </div>
-        </div>
+        </transition-group>
+
     </main>
 
     <script type="text/javascript">
