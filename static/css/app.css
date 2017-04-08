@@ -32,6 +32,8 @@ input.new-todo {
     border: none;
     border-bottom: solid 1px #444;
     margin-bottom: 10px;
+    color: #ccc;
+    padding: 2px 0px;
 }
 
 .container {

@@ -18,7 +18,7 @@
 
             <transition-group name="list-complete" tag="div" class="artists-container">
                 <div v-for="artist in sortedArtists" v-if="artistCache[artist]" class="list-complete-item" v-bind:key="artist">
-                  (( artistCache[artist].name )) <span class="delete-icon">&times;</span>
+                  (( artistCache[artist].name )) <span class="delete-icon" v-on:click="removeArtist(artist)">&times;</span>
                 </div>
             </transition-group>
 
