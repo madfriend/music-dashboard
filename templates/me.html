@@ -7,7 +7,8 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/app.css"/>
+
+    <link rel="stylesheet" type="text/css" href="/static/css/app.css?{{ r }}"/>
 </head>
 <body>
     <main id="app">
@@ -27,7 +28,7 @@
         <transition-group name="list-complete" tag="div" class="container">
             <div v-for="artist in sortedArtists" v-if="artistCache[artist]" v-bind:key="artist" class="card list-complete-item">
                 <div class="img-wrap">
-                    <!--span class="delete-icon" v-on:click="removeArtist(artist)">&times;</span-->
+                    <span class="delete-icon" v-on:click="removeArtist(artist)">&times;</span>
                     <img v-bind:src="artistCache[artist].img" v-if="artistCache[artist].img.length"/>
                     <b class="title">(( artistCache[artist].name ))</b>
                 </div>

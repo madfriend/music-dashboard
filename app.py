@@ -1,6 +1,7 @@
 import os
 import json
 import datetime
+import random
 
 from flask import Flask, render_template, request, url_for
 import requests
@@ -17,7 +18,8 @@ json_ok = '{status: "ok"}'
 def hello(user):
     artists = UA.select().where(UA.user == user)
     artists = list(map(lambda A: A.artist, artists))
-    return render_template('me.html', artists=json.dumps(artists), user=user)
+    return render_template('me.html', artists=json.dumps(artists), user=user,
+        r=random.random())
 
 @app.route('/api/add', methods=['POST'])
 def add():
