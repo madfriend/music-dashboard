@@ -1,7 +1,7 @@
 body {
     background: #111;
     color: #ccc;
-    font-family: 'Helvetica Neue', sans;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 main {
@@ -94,7 +94,7 @@ input.new-todo {
 }
 
 .event a {
-    font-size: 0.6em;
+    font-size: 0.75em;
     color: white;
     text-decoration: none;
 }
