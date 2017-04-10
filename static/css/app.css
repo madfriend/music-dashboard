@@ -150,3 +150,9 @@ input.new-artist-quickstart:-ms-input-placeholder { /* IE 10+ */
 input.new-artist-quickstart:-moz-placeholder { /* Firefox 18- */
   color: #444;
 }
+
+canvas {
+    position: absolute;
+    left: -9999;
+    bottom: -9999;
+}
