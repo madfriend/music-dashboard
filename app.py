@@ -2,6 +2,7 @@ import os
 import json
 import datetime
 import random
+import sys
 
 from flask import Flask, render_template, request, url_for
 import requests
@@ -31,7 +32,7 @@ def add():
 def delete():
     d = request.get_json()
     q = UA.delete().where(
-        UA.user == d['user'], UA.artist == d['artist'].lower())
+        UA.user == d['user'], UA.artist == d['artist'])
     q.execute()
     return json_ok
 

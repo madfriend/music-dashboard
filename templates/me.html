@@ -8,7 +8,7 @@
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
 
-    <link rel="stylesheet" type="text/css" href="/static/css/app.css?{{ r }}"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/app.css?r={{ r }}"/>
 </head>
 <body>
     <main id="app">
@@ -53,12 +53,12 @@
     </main>
 
     <script type="text/javascript">
-        var ARTISTS = {{ artists|safe }};
+        var ARTISTS = {{ artists | safe }};
         var USER = "{{ user | safe }}";
     </script>
 
-    <script type="text/javascript" src="/static/js/lastfm.js"></script>
-    <script type="text/javascript" src="/static/js/songkick.js"></script>
-    <script type="text/javascript" src="/static/js/app.js"></script>
+    <script type="text/javascript" src="/static/js/lastfm.js?r={{ r }}"></script>
+    <script type="text/javascript" src="/static/js/songkick.js?r={{ r }}"></script>
+    <script type="text/javascript" src="/static/js/app.js?r={{ r }}"></script>
 </body>
 </html>

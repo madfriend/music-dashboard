@@ -55,8 +55,9 @@ input.new-artist {
 .img-wrap .delete-icon {
     position: absolute;
     right: 3px;
-    text-shadow: 1px black;
+    text-shadow: 0px 1px black;
     z-index: 3;
+    cursor: pointer;
 }
 
 .card .desc {
@@ -107,10 +108,10 @@ input.new-artist {
     opacity: 0;
     transform: translateX(30px);
 }
+
 .list-complete-leave-active {
     position: absolute;
 }
-
 .quickstart {
     font-size: 2em;
     box-sizing: border-box;
