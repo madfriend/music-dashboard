@@ -76,6 +76,23 @@ var app = new Vue({
                 user: this.username,
                 artist: artist
             });
+        },
+        loadedImage: function(e) {
+            var parent = e.target.parentElement.parentElement;
+            var vibrant = new Vibrant(e.target);
+            var swatches = vibrant.swatches();
+
+            var l_color = '#cccccc',
+                d_color = '#111111';
+
+            if (swatches['LightVibrant'])
+                l_color = swatches['LightVibrant'].getHex();
+
+            if (swatches['DarkMuted'])
+                d_color = swatches['DarkMuted'].getHex();
+
+            parent.style.backgroundColor = d_color;
+            parent.querySelector('.desc').style.color = l_color;
         }
     }
 });

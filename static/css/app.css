@@ -50,6 +50,7 @@ input.new-artist {
     padding: 5px;
     background-color: #222;
     position: relative;
+    transition: all 1s;
 }
 
 .img-wrap .delete-icon {
@@ -96,22 +97,24 @@ input.new-artist {
 
 .event a {
     font-size: 0.75em;
-    color: white;
+    color: inherit;
     text-decoration: none;
-}
-
-.list-complete-item {
     transition: all 1s;
 }
-.list-complete-enter, .list-complete-leave-to
+
+.l-item {
+    transition: all 1s;
+}
+.l-enter, .l-leave-to
 /* .list-complete-leave-active for <2.1.8 */ {
     opacity: 0;
     transform: translateX(30px);
 }
 
-.list-complete-leave-active {
+.l-leave-active {
     position: absolute;
 }
+
 .quickstart {
     font-size: 2em;
     box-sizing: border-box;
@@ -126,21 +129,24 @@ input.new-artist-quickstart {
     border: none;
     border-bottom: solid 1px #444;
     margin-bottom: 10px;
-    color: #aaa;
+    color: #ccc;
     padding: 2px 0px;
     outline: none;
     width: 240px;
 }
 
 input.new-artist-quickstart::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-  color: #aaa;
+  color: #444;
 }
+
 input.new-artist-quickstart::-moz-placeholder { /* Firefox 19+ */
-  color: #aaa;
+  color: #444;
 }
+
 input.new-artist-quickstart:-ms-input-placeholder { /* IE 10+ */
-  color: #aaa;
+  color: #444;
 }
+
 input.new-artist-quickstart:-moz-placeholder { /* Firefox 18- */
-  color: #aaa;
+  color: #444;
 }

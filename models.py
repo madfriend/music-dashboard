@@ -15,6 +15,7 @@ db = PostgresqlDatabase(
     port=url.port
 )
 
+
 class UserArtist(Model):
     user = CharField()
     artist = CharField()
@@ -25,6 +26,7 @@ class UserArtist(Model):
             (('user', 'artist'), True),
         )
 
+
 class ArtistSearchCache(Model):
     query = CharField()
     result = TextField()
@@ -33,6 +35,7 @@ class ArtistSearchCache(Model):
     class Meta:
         database = db
 
+
 class EventSearchCache(Model):
     mbid = CharField()
     result = TextField()
@@ -40,6 +43,7 @@ class EventSearchCache(Model):
 
     class Meta:
         database = db
+
 
 db.connect()
 db.create_tables([UserArtist, ArtistSearchCache, EventSearchCache], safe=True)

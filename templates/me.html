@@ -17,37 +17,37 @@
                 placeholder="New artist?" v-model="newArtist"
                 @keyup.enter="addArtist"/>
 
-            <transition-group name="list-complete" tag="div" class="artists-container">
-                <div v-for="artist in sortedArtists" v-if="artistCache[artist]" class="list-complete-item" v-bind:key="artist">
+            <transition-group name="l" tag="div" class="artists-container">
+                <div v-for="artist in sortedArtists" v-if="artistCache[artist]" class="l-item" v-bind:key="artist">
                   (( artistCache[artist].name )) <span class="delete-icon" v-on:click="removeArtist(artist)">&times;</span>
                 </div>
             </transition-group>
 
         </aside>
 
-        <transition-group name="list-complete"
-          tag="div" class="container" v-if="artists.length > 0">
-            <div v-for="artist in sortedArtists" v-if="artistCache[artist]" v-bind:key="artist" class="card list-complete-item">
+        <transition-group name="l" tag="div" class="container" v-if="artists.length > 0">
+            <div v-for="artist in sortedArtists" v-if="artistCache[artist]" v-bind:key="artist" class="card l-item">
                 <div class="img-wrap">
                     <span class="delete-icon" v-on:click="removeArtist(artist)">&times;</span>
-                    <img v-bind:src="artistCache[artist].img" v-if="artistCache[artist].img.length"/>
+                    <img v-bind:src="artistCache[artist].img" v-if="artistCache[artist].img.length" v-on:load="loadedImage" crossOrigin="anonymous" />
                     <b class="title">(( artistCache[artist].name ))</b>
                 </div>
 
                 <div class="desc">
                     <div v-for="event in eventsCache[artistCache[artist].id]" class="event">
-                        <a v-bind:href="event.url" target="_blank">
+                        <a v-bind:href="event.url" target="_blank" class="event-link">
                             <b>(( event.location ))</b> (( event.date ))</a>
                     </div>
                 </div>
             </div>
         </transition-group>
+
       <div class="quickstart" v-if="artists.length === 0">
-        <span>I want to see
+        <span>I want to track concerts of
           <input class="new-artist-quickstart" autofocus autocomplete="off"
               placeholder="my favorite band" v-model="newArtist"
               @keyup.enter="addArtist"/>
-        live.</span>
+        </span>
       </div>
 
     </main>
@@ -59,6 +59,7 @@
 
     <script type="text/javascript" src="/static/js/lastfm.js?r={{ r }}"></script>
     <script type="text/javascript" src="/static/js/songkick.js?r={{ r }}"></script>
+    <script type="text/javascript" src="/static/js/Vibrant.min.js?r={{ r }}"></script>
     <script type="text/javascript" src="/static/js/app.js?r={{ r }}"></script>
 </body>
 </html>

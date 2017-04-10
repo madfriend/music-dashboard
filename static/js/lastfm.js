@@ -25,7 +25,7 @@ LastFM.prototype.reduceData = function(data) {
     return {
         'name': match.name,
         'url': match.url,
-        'img': img,
+        'img': img + '?r=' + Math.random(),
         'id': match.mbid
     };
 }
