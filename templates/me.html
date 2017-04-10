@@ -12,8 +12,8 @@
 </head>
 <body>
     <main id="app">
-        <aside>
-            <input class="new-todo" autofocus autocomplete="off"
+        <aside v-if="artists.length > 0">
+            <input class="new-artist" autofocus autocomplete="off"
                 placeholder="New artist?" v-model="newArtist"
                 @keyup.enter="addArtist"/>
 
@@ -25,7 +25,8 @@
 
         </aside>
 
-        <transition-group name="list-complete" tag="div" class="container">
+        <transition-group name="list-complete"
+          tag="div" class="container" v-if="artists.length > 0">
             <div v-for="artist in sortedArtists" v-if="artistCache[artist]" v-bind:key="artist" class="card list-complete-item">
                 <div class="img-wrap">
                     <span class="delete-icon" v-on:click="removeArtist(artist)">&times;</span>
@@ -41,6 +42,13 @@
                 </div>
             </div>
         </transition-group>
+      <div class="quickstart" v-if="artists.length === 0">
+        <span>I want to see
+          <input class="new-artist-quickstart" autofocus autocomplete="off"
+              placeholder="my favorite band" v-model="newArtist"
+              @keyup.enter="addArtist"/>
+        live.</span>
+      </div>
 
     </main>
 
