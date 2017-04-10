@@ -28,7 +28,7 @@ var app = new Vue({
 
     computed: {
         sortedArtists: function() {
-            return this.artists.concat().sort();
+            return this.artists.concat().sort(this.compareArtists);
         }
     },
 
@@ -51,12 +51,14 @@ var app = new Vue({
             this.newArtist = '';
 
         },
+
         saveArtist: function(value) {
             axios.post('/api/add', {
                 user: this.username,
                 artist: value
             });
         },
+
         addToCache: function(artist) {
             if (this.artistCache[artist]) return true;
             var that = this;
@@ -70,6 +72,7 @@ var app = new Vue({
                 });
             });
         },
+
         removeArtist: function(artist) {
             this.artists.splice(this.artists.indexOf(artist), 1);
             axios.post('/api/delete', {
@@ -77,6 +80,7 @@ var app = new Vue({
                 artist: artist
             });
         },
+
         loadedImage: function(e) {
             var parent = e.target.parentElement.parentElement;
             var vibrant = new Vibrant(e.target);
@@ -93,6 +97,26 @@ var app = new Vue({
 
             parent.style.backgroundColor = d_color;
             parent.querySelector('.desc').style.color = l_color;
+        },
+
+        compareArtists: function(a1, a2) {
+            if (!this.artistCache[a1]) return 1;
+            if (!this.artistCache[a2]) return -1;
+
+            var id1 = this.artistCache[a1].id;
+            var id2 = this.artistCache[a2].id;
+
+            if (!this.eventsCache[id1]) return 1;
+            if (!this.eventsCache[id2]) return -1;
+
+            var m1, m2;
+            var getDist = function(e) { return e.distance; };
+            var M = Number.MAX_VALUE;
+
+            m1 = Math.min.apply(null, this.eventsCache[id1].map(getDist)) || M;
+            m2 = Math.min.apply(null, this.eventsCache[id2].map(getDist)) || M;
+
+            return m1 - m2;
         }
     }
 });

@@ -30,7 +30,8 @@ Songkick.prototype.reduceEvent = function(event) {
         'url': event.uri,
         'name': event.displayName,
         'date': new Date(event.start.date).toLocaleDateString('ru-RU', dateFmt),
-        'location': loc
+        'location': loc,
+        'distance': distance(event.location.lng, event.location.lat)
     };
 };
 
@@ -55,5 +56,24 @@ function byDate(a, b) {
 function distance(lon, lat) {
     var clon = localStorage.getItem('lon') || 0,
         clat = localStorage.getItem('lat') || 0;
-    return Math.sqrt(Math.pow(lon - clon, 2) + Math.pow(lat - clat, 2));
+    return getDistanceFromLatLonInKm(lat, lon, clat, clon);
+}
+
+
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+  var dLon = deg2rad(lon2-lon1);
+  var a =
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+    ;
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  var d = R * c; // Distance in km
+  return d;
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
 }
