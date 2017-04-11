@@ -28,7 +28,15 @@ var app = new Vue({
 
     computed: {
         sortedArtists: function() {
-            return this.artists.concat().sort(this.compareArtists);
+            return this.artists.concat().sort();
+        },
+
+        artistById: function() {
+            var out = {};
+            for (a in this.artistCache) {
+                out[this.artistCache[a].id] = this.artistCache[a];
+            }
+            return out;
         }
     },
 
@@ -75,6 +83,10 @@ var app = new Vue({
 
         removeArtist: function(artist) {
             this.artists.splice(this.artists.indexOf(artist), 1);
+            var mbid = this.artistCache[artist].id;
+            delete this.artistCache[artist];
+            delete this.eventsCache[mbid];
+
             axios.post('/api/delete', {
                 user: this.username,
                 artist: artist
@@ -117,6 +129,26 @@ var app = new Vue({
             m2 = Math.min.apply(null, this.eventsCache[id2].map(getDist)) || M;
 
             return m1 - m2;
+        },
+
+        closestEvents: function() {
+            var all_events = [];
+            var byFirst = function(a, b) {
+                return a[0] - b[0];
+            };
+
+            for (mbid in this.eventsCache) {
+                this.eventsCache[mbid].forEach(function(evt) {
+                    all_events.push([evt.distance, mbid, evt]);
+                });
+            }
+
+            all_events.sort(byFirst);
+
+            if (all_events.length >= 5) {
+                return all_events.slice(0, 5);
+            }
+            return all_events;
         }
     }
 });

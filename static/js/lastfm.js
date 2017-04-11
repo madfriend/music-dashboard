@@ -21,11 +21,13 @@ LastFM.prototype.reduceData = function(data) {
     };
 
     var img = match.image.find(_find('large'))['#text'];
+    if (img)
+      img += '?r=' + Math.random();
 
     return {
         'name': match.name,
         'url': match.url,
-        'img': img + '?r=' + Math.random(),
+        'img': img,
         'id': match.mbid
     };
 }
