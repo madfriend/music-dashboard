@@ -19,12 +19,12 @@ json_ok = '{status: "ok"}'
 def hello(user):
     artists = UA.select().where(UA.user == user)
     artists = list(map(lambda A: A.artist, artists))
-    users = []
-    if user == 'madfriend':
-        users = list(map(lambda A: A.user, UA.select(UA.user).distinct()))
-
     return render_template('me.html', artists=json.dumps(artists), user=user,
-        users=json.dumps(users), r=random.random())
+        r=random.random())
+
+@app.route('/api/users')
+def users():
+    return json.dumps(list(map(lambda A: A.user, UA.select(UA.user).distinct())))
 
 @app.route('/api/add', methods=['POST'])
 def add():
