@@ -26,7 +26,8 @@ var app = new Vue({
         eventsCache: {},
 
         fullscreen: false,
-        show_inactive: true
+        show_inactive: true,
+        unlocked: true
 
     },
 

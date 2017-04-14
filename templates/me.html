@@ -18,7 +18,8 @@
         <main>
             <aside class="settings">
               <div class="claim">
-                <i class="icon icon-lock"></i>
+                <i class="icon icon-lock" v-if="unlocked"></i>
+                <i class="icon icon-lock-open" v-else></i>
               </div>
               <div class="hide-inactive" title="Show inactive artists' cards"
                   v-on:click="show_inactive = !show_inactive">
@@ -33,13 +34,13 @@
 
             <transition name="slide-fade">
               <aside v-if="!fullscreen && artists.length > 0" class="artists">
-                  <input class="new-artist" autofocus autocomplete="off"
+                  <input class="new-artist" v-if="unlocked" autofocus autocomplete="off"
                       placeholder="New artist?" v-model="newArtist"
                       @keyup.enter="addArtist"/>
 
                   <transition-group name="l" tag="div" class="artists-container">
                       <div v-for="artist in sortedArtists" v-if="artistCache[artist]" class="l-item" v-bind:key="artist">
-                        (( artistCache[artist].name )) <span class="delete-icon" v-on:click="removeArtist(artist)">&times;</span>
+                        (( artistCache[artist].name )) <span class="delete-icon" v-on:click="removeArtist(artist)" v-if="unlocked">&times;</span>
                       </div>
                   </transition-group>
               </aside>
@@ -48,7 +49,7 @@
             <transition-group name="l" tag="div" class="container" v-if="artists.length > 0">
                 <div v-for="artist in sortedArtists" v-if="show(artist)" v-bind:key="artist" class="card l-item">
                     <div class="img-wrap">
-                        <span class="delete-icon" v-on:click="removeArtist(artist)">&times;</span>
+                        <span class="delete-icon" v-if="unlocked" v-on:click="removeArtist(artist)">&times;</span>
                         <img v-bind:src="artistCache[artist].img" v-if="artistCache[artist].img.length" v-on:load="loadedImage" crossOrigin="anonymous" />
                         <div v-bind:class="['title', eventsCache[artistCache[artist].id].length > 0 ? 'on-tour' : '']">
                              (( artistCache[artist].name ))
@@ -64,13 +65,17 @@
                 </div>
             </transition-group>
 
-          <div class="quickstart" v-if="artists.length === 0">
+          <div class="quickstart" v-if="unlocked && artists.length === 0">
                 <span>I want to track concerts of
                 <input class="new-artist-quickstart" autofocus autocomplete="off"
                   placeholder="my favorite band" v-model="newArtist"
                   @keyup.enter="addArtist"/>,
                 </span>
                 <button type="button" v-on:click="addArtist">Enter</button> <br/>
+          </div>
+
+          <div class="quickstart" v-if="!unlocked && artists.length === 0">
+            This dashboard is empty but locked.
           </div>
         </main>
 
