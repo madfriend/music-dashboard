@@ -15,9 +15,23 @@
 </head>
 <body>
     <div id="app" v-cloak>
+        <transition name="fade">
+            <div v-if="modalVisible" class="modal-backdrop" v-on:click.self="modalVisible = false">
+                <div class="modal">
+                    <div v-if="unlocked">
+                        <p><i class="large icon icon-lock-open"></i> Pick a pin to lock</p>
+                        <p><input type="password" class="pin"/> <button type="button">Lock</button></p>
+                    </div>
+                    <div v-else>
+                        <i class="large icon icon-lock"></i> Enter pin to unlock
+                    </div>
+                </div>
+            </div>
+        </transition>
+
         <main>
             <aside class="settings" v-if="artists.length > 0">
-              <div class="claim">
+              <div class="claim" v-on:click="modalVisible = true">
                 <i class="icon icon-lock" v-if="unlocked"></i>
                 <i class="icon icon-lock-open" v-else></i>
               </div>

@@ -9,7 +9,9 @@ import requests
 
 from models import UserArtist as UA, \
                    ArtistSearchCache as ArtistCache, \
-                   EventSearchCache as EventCache
+                   EventSearchCache as EventCache, \
+                   PageLock
+
 
 
 app = Flask(__name__, static_url_path='/static')

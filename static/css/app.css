@@ -160,7 +160,7 @@ input.new-artist {
     padding-top: 200px;
 }
 
-.quickstart button {
+button {
    background-color: #222;
    border: solid 2px #444;
    border-radius: 5px;
@@ -170,7 +170,7 @@ input.new-artist {
    cursor: pointer;
 }
 
-.quickstart button:hover {
+button:hover {
    background-color: rebeccapurple;
    border-color: rebeccapurple;
    color: white;
@@ -221,4 +221,51 @@ canvas {
     width: 0px !important;
     overflow: hidden;
     transform: translateX(-30px);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: all .5s;
+}
+
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}
+
+.modal-backdrop {
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal {
+    width: 300px;
+    min-height: 100px;
+    margin: 0 auto;
+    margin-top: 100px;
+    background-color: #111;
+    padding: 20px 10px;
+    box-sizing: border-box;
+    font-size: 1.5em;
+    text-align: center;
+    z-index: 6;
+}
+
+.modal .pin {
+    background-color: #111;
+    border: solid 1px #444;
+    border-radius: 3px;
+    color: #ccc;
+    padding: 2px 5px;
+    outline: none;
+    width: 150px;
+}
+
+.modal p {
+    margin-bottom: 10px;
+    margin-top: 0px;
 }

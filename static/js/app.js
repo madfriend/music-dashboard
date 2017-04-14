@@ -27,7 +27,9 @@ var app = new Vue({
 
         fullscreen: false,
         show_inactive: true,
-        unlocked: true
+        unlocked: true,
+
+        modalVisible: false
 
     },
 
