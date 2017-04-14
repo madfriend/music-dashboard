@@ -200,8 +200,8 @@ input.new-artist-quickstart:-moz-placeholder { /* Firefox 18- */
 
 canvas {
     position: absolute;
-    left: -9999;
-    bottom: -9999;
+    left: -9999px;
+    bottom: -9999px;
 }
 
 .slide-fade-enter-active,
