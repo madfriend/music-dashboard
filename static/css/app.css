@@ -108,6 +108,7 @@ input.new-artist {
     left: 5px;
     bottom: 5px;
     z-index: 3;
+    color: #ccc;
 }
 
 .img-wrap .title.on-tour {

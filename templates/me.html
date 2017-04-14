@@ -16,7 +16,7 @@
 <body>
     <div id="app" v-cloak>
         <main>
-            <aside class="settings">
+            <aside class="settings" v-if="artists.length > 0">
               <div class="claim">
                 <i class="icon icon-lock" v-if="unlocked"></i>
                 <i class="icon icon-lock-open" v-else></i>
