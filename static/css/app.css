@@ -103,6 +103,7 @@ input.new-artist {
 .img-wrap .title {
     position: absolute;
     font-weight: bold;
+    text-decoration: none;
     opacity: 0.6;
     left: 5px;
     bottom: 5px;

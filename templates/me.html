@@ -51,9 +51,9 @@
                     <div class="img-wrap">
                         <span class="delete-icon" v-if="unlocked" v-on:click="removeArtist(artist)">&times;</span>
                         <img v-bind:src="artistCache[artist].img" v-if="artistCache[artist].img.length" v-on:load="loadedImage" crossOrigin="anonymous" />
-                        <div v-bind:class="['title', eventsCache[artistCache[artist].id].length > 0 ? 'on-tour' : '']">
-                             (( artistCache[artist].name ))
-                        </div>
+                        <a v-bind:class="['title', eventsCache[artistCache[artist].id].length > 0 ? 'on-tour' : '']" v-bind:href="artistCache[artist].url" target="_blank">
+                            (( artistCache[artist].name ))
+                        </a>
                     </div>
 
                     <div class="desc">
