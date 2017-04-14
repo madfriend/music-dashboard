@@ -20,6 +20,10 @@ aside.settings {
     color: #888;
 }
 
+.white.icon {
+    color: white;
+}
+
 aside.artists {
     width: 180px;
     font-size: 0.8em;

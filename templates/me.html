@@ -23,7 +23,8 @@
               </div>
               <div class="hide-inactive" title="Show inactive artists' cards"
                   v-on:click="show_inactive = !show_inactive">
-                <i class="icon icon-eye"></i>
+                <i class="icon icon-eye" v-if="!show_inactive"></i>
+                <i class="white icon icon-eye" v-else></i>
               </div>
               <div class="fullscreen" title="Toggle fullscreen"
                    v-on:click="fullscreen = !fullscreen">
