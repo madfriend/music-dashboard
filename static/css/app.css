@@ -1,7 +1,8 @@
 body {
     background: #111;
     color: #ccc;
-    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont,
+        'Helvetica Neue', Arial, sans-serif;
 }
 
 main {
@@ -9,11 +10,17 @@ main {
     flex-direction: row;
 }
 
-[v-cloak] {
-   display: none;
+aside.settings {
+    width: 30px;
+    box-sizing: border-box;
+    padding: 5px;
+    padding-top: 10px;
+    text-align: center;
+    height: 95vh;
+    color: #888;
 }
 
-aside {
+aside.artists {
     width: 180px;
     font-size: 0.8em;
     padding: 5px 10px 5px 5px;
@@ -26,7 +33,7 @@ aside div {
     margin-bottom: 5px;
 }
 
-aside div .delete-icon {
+aside.artists div .delete-icon {
     float: right;
     clear: both;
     color: #555;
@@ -53,6 +60,7 @@ input.new-artist {
    height: 5vh;
    padding-bottom: 5px;
    padding-left: 10px;
+   box-sizing: border-box;
 }
 
 .feed-item {
@@ -80,10 +88,6 @@ input.new-artist {
     cursor: pointer;
 }
 
-.card .desc {
-    /*min-height: 50px;*/
-}
-
 .card img {
     width: 150px;
     height: 150px;
@@ -98,9 +102,16 @@ input.new-artist {
 
 .img-wrap .title {
     position: absolute;
+    font-weight: bold;
+    opacity: 0.6;
     left: 5px;
     bottom: 5px;
     z-index: 3;
+}
+
+.img-wrap .title.on-tour {
+    color: #ddd;
+    opacity: 1;
 }
 
 .card .img-wrap::after {
@@ -122,7 +133,7 @@ input.new-artist {
 }
 
 .l-item {
-    transition: all 1s;
+    transition: all 0.8s;
 }
 .l-enter, .l-leave-to
 /* .list-complete-leave-active for <2.1.8 */ {
@@ -191,4 +202,17 @@ canvas {
     position: absolute;
     left: -9999;
     bottom: -9999;
+}
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+    transition: all .1s;
+    white-space: nowrap;
+}
+
+.slide-fade-enter, .slide-fade-leave-to {
+    opacity: 0;
+    width: 0px !important;
+    overflow: hidden;
+    transform: translateX(-30px);
 }

@@ -3,35 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <title>Gigs for {{ user | safe }}</title>
+    <style type="text/css">[v-cloak] {display: none;}</style>
+
     <script type="text/javascript" src="https://unpkg.com/vue@2.2.1"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.css">
 
     <link rel="stylesheet" type="text/css" href="/static/css/app.css?r={{ r }}"/>
 </head>
 <body>
-    <div id="app">
-        <main v-cloak>
-            <aside v-if="artists.length > 0">
-                <input class="new-artist" autofocus autocomplete="off"
-                    placeholder="New artist?" v-model="newArtist"
-                    @keyup.enter="addArtist"/>
-
-                <transition-group name="l" tag="div" class="artists-container">
-                    <div v-for="artist in sortedArtists" v-if="artistCache[artist]" class="l-item" v-bind:key="artist">
-                      (( artistCache[artist].name )) <span class="delete-icon" v-on:click="removeArtist(artist)">&times;</span>
-                    </div>
-                </transition-group>
-
+    <div id="app" v-cloak>
+        <main>
+            <aside class="settings">
+              <div class="claim">
+                <i class="icon icon-lock"></i>
+              </div>
+              <div class="hide-inactive" title="Show inactive artists' cards"
+                  v-on:click="show_inactive = !show_inactive">
+                <i class="icon icon-eye"></i>
+              </div>
+              <div class="fullscreen" title="Toggle fullscreen"
+                   v-on:click="fullscreen = !fullscreen">
+                <i v-if="fullscreen" class="icon icon-size-actual"></i>
+                <i v-else class="icon icon-size-fullscreen"></i>
+              </div>
             </aside>
 
+            <transition name="slide-fade">
+              <aside v-if="!fullscreen && artists.length > 0" class="artists">
+                  <input class="new-artist" autofocus autocomplete="off"
+                      placeholder="New artist?" v-model="newArtist"
+                      @keyup.enter="addArtist"/>
+
+                  <transition-group name="l" tag="div" class="artists-container">
+                      <div v-for="artist in sortedArtists" v-if="artistCache[artist]" class="l-item" v-bind:key="artist">
+                        (( artistCache[artist].name )) <span class="delete-icon" v-on:click="removeArtist(artist)">&times;</span>
+                      </div>
+                  </transition-group>
+              </aside>
+            </transition>
+
             <transition-group name="l" tag="div" class="container" v-if="artists.length > 0">
-                <div v-for="artist in sortedArtists" v-if="artistCache[artist]" v-bind:key="artist" class="card l-item">
+                <div v-for="artist in sortedArtists" v-if="show(artist)" v-bind:key="artist" class="card l-item">
                     <div class="img-wrap">
                         <span class="delete-icon" v-on:click="removeArtist(artist)">&times;</span>
                         <img v-bind:src="artistCache[artist].img" v-if="artistCache[artist].img.length" v-on:load="loadedImage" crossOrigin="anonymous" />
-                        <b class="title">(( artistCache[artist].name ))</b>
+                        <div v-bind:class="['title', eventsCache[artistCache[artist].id].length > 0 ? 'on-tour' : '']">
+                             (( artistCache[artist].name ))
+                        </div>
                     </div>
 
                     <div class="desc">
@@ -53,7 +74,7 @@
           </div>
         </main>
 
-        <transition-group name="l" tag="div" class="feed" v-if="closestEvents()">
+        <transition-group name="l" tag="marquee" class="feed" v-if="closestEvents()">
           <a class="feed-item l-item" v-bind:href="e[2].url" target="_blank" key="e" v-for="e in closestEvents()">
               <span class="feed-item-artist">(( artistById[e[1]].name ))</span> @
               <b>(( e[2].location ))</b> (( e[2].date ))

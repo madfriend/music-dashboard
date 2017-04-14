@@ -23,7 +23,11 @@ var app = new Vue({
         username: USER,
         newArtist: '',
         artistCache: {},
-        eventsCache: {}
+        eventsCache: {},
+
+        fullscreen: false,
+        show_inactive: true
+
     },
 
     computed: {
@@ -47,6 +51,14 @@ var app = new Vue({
     },
 
     methods: {
+        show: function(artist) {
+            if (!this.artistCache[artist]) return false;
+            var mbid = this.artistCache[artist].id;
+            if (!this.show_inactive && this.eventsCache[mbid].length === 0)
+                return false;
+            return true;
+        },
+
         addArtist: function() {
             var value = this.newArtist && this.newArtist.trim();
             if (!value) {
@@ -144,10 +156,9 @@ var app = new Vue({
             }
 
             all_events.sort(byFirst);
-
-            if (all_events.length >= 5) {
-                return all_events.slice(0, 5);
-            }
+            // if (all_events.length >= 5) {
+            //     return all_events.slice(0, 5);
+            // }
             return all_events;
         }
     }
