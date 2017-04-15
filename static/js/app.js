@@ -1,4 +1,4 @@
-var lastfm = new LastFM();
+var lastfm = new LastFM(LF_CACHE);
 var songkick = new Songkick();
 
 assureLocation();
@@ -22,12 +22,16 @@ var app = new Vue({
         artists: ARTISTS,
         username: USER,
         newArtist: '',
+        pinInput: '',
+
         artistCache: {},
         eventsCache: {},
 
         fullscreen: false,
         show_inactive: true,
-        unlocked: true,
+
+        has_pin: LOCKED,
+        locked: LOCKED,
 
         modalVisible: false
 
@@ -44,6 +48,10 @@ var app = new Vue({
                 out[this.artistCache[a].id] = this.artistCache[a];
             }
             return out;
+        },
+
+        locksApply: function() {
+            return (this.locked && this.has_pin) || (!this.locked && !this.has_pin);
         }
     },
 
@@ -62,6 +70,14 @@ var app = new Vue({
             return true;
         },
 
+        artistClass: function(artist) {
+            if (!this.artistCache[artist]) return '';
+            var mbid = this.artistCache[artist].id;
+            if (!this.eventsCache[mbid] || this.eventsCache[mbid].length === 0)
+                return '';
+            return 'on-tour';
+        },
+
         addArtist: function() {
             var value = this.newArtist && this.newArtist.trim();
             if (!value) {
@@ -78,7 +94,8 @@ var app = new Vue({
         saveArtist: function(value) {
             axios.post('/api/add', {
                 user: this.username,
-                artist: value
+                artist: value,
+                pin: localStorage.getItem('pin')
             });
         },
 
@@ -104,23 +121,32 @@ var app = new Vue({
 
             axios.post('/api/delete', {
                 user: this.username,
-                artist: artist
+                artist: artist,
+                pin: localStorage.getItem('pin')
             });
         },
 
         loadedImage: function(e) {
             var parent = e.target.parentElement.parentElement;
-            var vibrant = new Vibrant(e.target);
-            var swatches = vibrant.swatches();
+            var l_color = localStorage.getItem(e.target.src + '-light');
+            var d_color = localStorage.getItem(e.target.src + '-dark');
 
-            var l_color = '#cccccc',
+            if (!l_color || !d_color) {
+                var vibrant = new Vibrant(e.target);
+                var swatches = vibrant.swatches();
+
+                l_color = '#cccccc';
                 d_color = '#111111';
 
-            if (swatches['LightVibrant'])
-                l_color = swatches['LightVibrant'].getHex();
+                if (swatches['LightVibrant'])
+                    l_color = swatches['LightVibrant'].getHex();
 
-            if (swatches['DarkMuted'])
-                d_color = swatches['DarkMuted'].getHex();
+                if (swatches['DarkMuted'])
+                    d_color = swatches['DarkMuted'].getHex();
+
+                localStorage.setItem(e.target.src + '-light', l_color);
+                localStorage.setItem(e.target.src + '-dark', d_color);
+            }
 
             parent.style.backgroundColor = d_color;
             parent.querySelector('.desc').style.color = l_color;
@@ -163,6 +189,37 @@ var app = new Vue({
             //     return all_events.slice(0, 5);
             // }
             return all_events;
-        }
+        },
+
+        // setPin, checkPin
+        setPin: function() {
+            var pin = this.pinInput.trim();
+            if (!pin) return false;
+            var that = this;
+
+            axios.post('/api/lock', {
+                user: this.username,
+                pin: pin
+            }).then(function(response) {
+                that.has_pin = (response['data']['status'] === 'ok');
+                that.modalVisible = false;
+            }).catch(console.log);
+        },
+
+        checkPin: function() {
+            var pin = this.pinInput.trim();
+            if (!pin) return false;
+            var that = this;
+
+            axios.post('/api/check-lock', {
+                user: this.username,
+                pin: pin
+            }).then(function(response) {
+                that.locked = !(response['data']['status'] === 'ok');
+                localStorage.setItem('pin', pin);
+                that.modalVisible = false;
+            }).catch(console.log);
+        },
+
     }
 });

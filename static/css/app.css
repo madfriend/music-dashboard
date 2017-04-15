@@ -8,6 +8,11 @@ body {
 main {
     display: flex;
     flex-direction: row;
+    transition: all 0.5s;
+}
+
+main.blurred {
+    filter: blur(2px);
 }
 
 aside.settings {
@@ -41,6 +46,10 @@ aside.artists div .delete-icon {
     float: right;
     clear: both;
     color: #555;
+}
+
+.delete-icon {
+    cursor: pointer;
 }
 
 input.new-artist {
@@ -170,6 +179,10 @@ button {
    cursor: pointer;
 }
 
+button .icon {
+    font-size: 0.8em;
+}
+
 button:hover {
    background-color: rebeccapurple;
    border-color: rebeccapurple;
@@ -243,14 +256,15 @@ canvas {
 }
 
 .modal {
-    width: 300px;
+    width: 400px;
     min-height: 100px;
     margin: 0 auto;
     margin-top: 100px;
-    background-color: #111;
+    background-color: #222;
+    border-radius: 3px;
     padding: 20px 10px;
     box-sizing: border-box;
-    font-size: 1.5em;
+    font-size: 2em;
     text-align: center;
     z-index: 6;
 }

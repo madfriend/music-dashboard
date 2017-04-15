@@ -5,7 +5,8 @@
     <title>Gigs for {{ user | safe }}</title>
     <style type="text/css">[v-cloak] {display: none;}</style>
 
-    <script type="text/javascript" src="https://unpkg.com/vue@2.2.1"></script>
+    <!--script type="text/javascript" src="https://unpkg.com/vue@2.2.1"></script-->
+    <script type="text/javascript" src="https://vuejs.org/js/vue.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
@@ -18,22 +19,33 @@
         <transition name="fade">
             <div v-if="modalVisible" class="modal-backdrop" v-on:click.self="modalVisible = false">
                 <div class="modal">
-                    <div v-if="unlocked">
-                        <p><i class="large icon icon-lock-open"></i> Pick a pin to lock</p>
-                        <p><input type="password" class="pin"/> <button type="button">Lock</button></p>
+                    <div v-if="locked && has_pin">
+                        <p>Enter your pincode</p>
+                        <p><input type="password" class="pin" placeholder="Your pin"
+                            v-model="pinInput" @keyup.enter="checkPin"/>
+                            <button type="button" v-on:click="checkPin">
+                                <i class="icon icon-lock-open"></i> Unlock
+                            </button>
+                        </p>
                     </div>
-                    <div v-else>
-                        <i class="large icon icon-lock"></i> Enter pin to unlock
+                    <div v-if="!locked && !has_pin">
+                        <p>Set pin for this page</p>
+                        <p><input type="password" class="pin" placeholder="Your pin"
+                            v-model="pinInput" @keyup.enter="setPin"/>
+                            <button type="button" v-on:click="setPin">
+                                <i class="icon icon-lock"></i> Lock
+                            </button>
+                        </p>
                     </div>
                 </div>
             </div>
         </transition>
 
-        <main>
+        <main v-bind:class="modalVisible ? 'blurred' : ''">
             <aside class="settings" v-if="artists.length > 0">
-              <div class="claim" v-on:click="modalVisible = true">
-                <i class="icon icon-lock" v-if="unlocked"></i>
-                <i class="icon icon-lock-open" v-else></i>
+              <div class="claim" v-if="locksApply">
+                <i class="icon icon-lock" v-if="!locked && !has_pin" v-on:click="modalVisible=true"></i>
+                <i class="icon icon-lock-open" v-if="locked && has_pin" v-on:click="modalVisible=true"></i>
               </div>
               <div class="hide-inactive" title="Show inactive artists' cards"
                   v-on:click="show_inactive = !show_inactive">
@@ -49,13 +61,13 @@
 
             <transition name="slide-fade">
               <aside v-if="!fullscreen && artists.length > 0" class="artists">
-                  <input class="new-artist" v-if="unlocked" autofocus autocomplete="off"
+                  <input class="new-artist" v-if="!locked" autofocus autocomplete="off"
                       placeholder="New artist?" v-model="newArtist"
                       @keyup.enter="addArtist"/>
 
                   <transition-group name="l" tag="div" class="artists-container">
                       <div v-for="artist in sortedArtists" v-if="artistCache[artist]" class="l-item" v-bind:key="artist">
-                        (( artistCache[artist].name )) <span class="delete-icon" v-on:click="removeArtist(artist)" v-if="unlocked">&times;</span>
+                        (( artistCache[artist].name )) <span class="delete-icon" v-on:click="removeArtist(artist)" v-if="!locked">&times;</span>
                       </div>
                   </transition-group>
               </aside>
@@ -64,9 +76,9 @@
             <transition-group name="l" tag="div" class="container" v-if="artists.length > 0">
                 <div v-for="artist in sortedArtists" v-if="show(artist)" v-bind:key="artist" class="card l-item">
                     <div class="img-wrap">
-                        <span class="delete-icon" v-if="unlocked" v-on:click="removeArtist(artist)">&times;</span>
+                        <span class="delete-icon" v-if="!locked" v-on:click="removeArtist(artist)">&times;</span>
                         <img v-bind:src="artistCache[artist].img" v-if="artistCache[artist].img.length" v-on:load="loadedImage" crossOrigin="anonymous" />
-                        <a v-bind:class="['title', eventsCache[artistCache[artist].id].length > 0 ? 'on-tour' : '']" v-bind:href="artistCache[artist].url" target="_blank">
+                        <a v-bind:class="'title ' + artistClass(artist)" v-bind:href="artistCache[artist].url" target="_blank">
                             (( artistCache[artist].name ))
                         </a>
                     </div>
@@ -80,7 +92,7 @@
                 </div>
             </transition-group>
 
-          <div class="quickstart" v-if="unlocked && artists.length === 0">
+          <div class="quickstart" v-if="artists.length === 0">
                 <span>I want to track concerts of
                 <input class="new-artist-quickstart" autofocus autocomplete="off"
                   placeholder="my favorite band" v-model="newArtist"
@@ -89,9 +101,6 @@
                 <button type="button" v-on:click="addArtist">Enter</button> <br/>
           </div>
 
-          <div class="quickstart" v-if="!unlocked && artists.length === 0">
-            This dashboard is empty but locked.
-          </div>
         </main>
 
         <transition-group name="l" tag="marquee" class="feed" v-if="closestEvents()">
@@ -105,6 +114,8 @@
     <script type="text/javascript">
         var ARTISTS = {{ artists | safe }};
         var USER = "{{ user | safe }}";
+        var LF_CACHE = {{ lf_cache | safe }};
+        var LOCKED = {{ has_pin | safe }};
     </script>
 
     <script type="text/javascript" src="/static/js/lastfm.js?r={{ r }}"></script>

@@ -45,15 +45,14 @@ class EventSearchCache(Model):
     class Meta:
         database = db
 
-class PageLock(Model):
-    page = CharField()
-    locked = BooleanField()
-    hash = CharField()
+class Page(Model):
+    user = CharField()
+    pin_hash = CharField()
 
     class Meta:
         database = db
 
 db.connect()
 db.create_tables([
-    UserArtist, ArtistSearchCache, EventSearchCache, PageLock],
+    UserArtist, ArtistSearchCache, EventSearchCache, Page],
     safe=True)

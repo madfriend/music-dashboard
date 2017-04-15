@@ -1,10 +1,15 @@
-function LastFM() {}
+function LastFM(cache) {
+    this.cache = cache;
+}
 
 LastFM.prototype.makeGetUrl = function(query) {
     return '/api/artist_search/' + encodeURIComponent(query);
 };
 
 LastFM.prototype.get = function(artist, cb) {
+    if (this.cache && this.cache[artist.toLowerCase()])
+        return cb(this.reduceData(this.cache[artist]));
+
     axios.get(this.makeGetUrl(artist))
         .then(function(response) {
             cb(this.reduceData(response['data']));
