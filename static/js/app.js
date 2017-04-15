@@ -80,7 +80,9 @@ var app = new Vue({
 
         addArtist: function() {
             var value = this.newArtist && this.newArtist.trim();
-            if (!value) {
+            value = value.toLowerCase();
+
+            if (!value || this.artists.indexOf(value) !== -1) {
                 return;
             }
 
