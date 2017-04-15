@@ -44,9 +44,13 @@ def hello(user):
     if len(artists) == 0:
         has_pin = False
 
-    lf_cache = dict((artist, json.loads(
-        ArtistCache.get(ArtistCache.query == artist.lower()).result))
-        for artist in artists)
+    lf_cache = dict()
+    for artist in artists:
+        try:
+            lf_cache[artist] = json.loads(
+                ArtistCache.get(ArtistCache.query == artist.lower()).result)
+        except ValueError:
+            pass
 
     return render_template('me.html', artists=json.dumps(artists), user=user,
         r=random.random(), lf_cache=json.dumps(lf_cache), has_pin=json.dumps(has_pin))
