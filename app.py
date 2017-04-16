@@ -49,7 +49,7 @@ def hello(user):
         try:
             lf_cache[artist] = json.loads(
                 ArtistCache.get(ArtistCache.query == artist.lower()).result)
-        except ValueError:
+        except (ValueError, ArtistCache.DoesNotExist):
             pass
 
     return render_template('me.html', artists=json.dumps(artists), user=user,
